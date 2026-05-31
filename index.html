@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lógica y Lenguajes — Modo examen</title>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global' } };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    :root{--bg:#f6f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#d9deea;--accent:#3057d5;--good:#147a3e;--bad:#b42318;--warn:#b54708}*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}header{text-align:center;padding:28px 16px 14px}h1{margin:0 0 8px;font-size:clamp(1.6rem,4vw,2.4rem)}.sub{color:var(--muted);max-width:780px;margin:0 auto}main{max-width:980px;margin:0 auto;padding:0 16px 40px}.toolbar,.card,.stats{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:0 10px 30px rgba(20,30,60,.06)}.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:10px;padding:14px;margin-bottom:14px}select,button,textarea{font:inherit}select{width:100%;padding:11px;border:1px solid var(--line);border-radius:12px;background:#fff}button{border:0;border-radius:12px;padding:11px 14px;cursor:pointer;font-weight:700;background:var(--accent);color:#fff}.secondary{background:#eef2ff;color:#20326f}.good{background:var(--good)}.bad{background:var(--bad)}.warn{background:var(--warn)}button:disabled{opacity:.45;cursor:not-allowed}.card{padding:22px}.meta{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:.95rem;margin-bottom:16px;flex-wrap:wrap}.pill{background:#f2f4f7;padding:5px 10px;border-radius:999px}.question{font-size:1.35rem;line-height:1.35;margin:14px 0 18px;font-weight:800}textarea{width:100%;min-height:145px;resize:vertical;border:1px solid var(--line);border-radius:14px;padding:14px;line-height:1.5}.actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}.answer{display:none;margin-top:18px;padding:18px;border:1px solid var(--line);border-radius:16px;background:#fbfcff;line-height:1.58}.answer.show{display:block}.answer h3{margin-top:0}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px;margin-top:14px;text-align:center}.stat strong{display:block;font-size:1.35rem}.progress{height:10px;background:#eaecf0;border-radius:999px;overflow:hidden;margin-top:14px}.bar{height:100%;width:0%;background:var(--accent);transition:width .25s}.small{color:var(--muted);font-size:.9rem;margin-top:10px}.tag{font-weight:700;color:var(--accent)}pre{white-space:pre-wrap;background:#111827;color:#f9fafb;padding:12px;border-radius:12px;overflow:auto}@media(max-width:700px){.toolbar{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.question{font-size:1.15rem}}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Lógica y Lenguajes — modo pregunta-respuesta</h1>
+  <p class="sub">Responde de memoria, revela la solución y marca si la sabías. El progreso se guarda automáticamente en este navegador.</p>
+</header>
+<main>
+  <section class="toolbar">
+    <select id="tema"></select>
+    <button class="secondary" id="shuffle">Mezclar</button>
+    <button class="secondary" id="reset">Reiniciar progreso</button>
+  </section>
+  <section class="card">
+    <div class="meta"><span class="pill" id="temaActual"></span><span class="pill" id="contador"></span></div>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <div class="question" id="pregunta"></div>
+    <textarea id="respuestaUsuario" placeholder="Escribe aquí tu respuesta antes de mirar la solución..."></textarea>
+    <div class="actions">
+      <button id="mostrar">Mostrar solución</button>
+      <button class="good" id="bien" disabled>La sabía</button>
+      <button class="bad" id="mal" disabled>No la sabía</button>
+      <button class="warn" id="duda" disabled>Duda / repasar</button>
+      <button class="secondary" id="siguiente">Siguiente</button>
+    </div>
+    <div class="answer" id="answer"><h3>Solución esperada</h3><div id="solucion"></div></div>
+    <p class="small">Atajos: Enter = mostrar solución · 1 = la sabía · 2 = no la sabía · 3 = duda · → = siguiente.</p>
+  </section>
+  <section class="stats">
+    <div class="stat"><strong id="total">0</strong><span>Total</span></div>
+    <div class="stat"><strong id="ok">0</strong><span>Sabidas</span></div>
+    <div class="stat"><strong id="ko">0</strong><span>No sabidas</span></div>
+    <div class="stat"><strong id="review">0</strong><span>Repasar</span></div>
+  </section>
+</main>
+<script>
+const DATA = [
+{t:'Autómatas finitos',q:'Definir el concepto de autómata determinista.',a:`Un autómata determinista es una estructura $M=(K,\\Sigma,\\delta,q_0,F)$ donde:<ol><li>$K$ es un conjunto finito y no vacío de estados.</li><li>$\\Sigma$ es el alfabeto de entrada.</li><li>$\\delta:K\\times\\Sigma\\to K$ es la función de transición.</li><li>$q_0\\in K$ es el estado inicial.</li><li>$F\\subseteq K$ es el conjunto de estados aceptadores.</li></ol>`},
+{t:'Autómatas finitos',q:'Definir configuración y cómputo en un autómata determinista.',a:`Una configuración tiene la forma $px\\in K\\Sigma^*$, donde $p$ es el estado actual y $x$ es la parte de la entrada que queda por leer. Hay un cómputo de $px$ a $qy$ si se puede pasar de una configuración a la otra aplicando un número finito de veces la función de transición.`},
+{t:'Autómatas finitos',q:'Definir el lenguaje reconocido por un autómata determinista.',a:`Sea $M=(K,\\Sigma,\\delta,q_0,F)$. Una palabra $x\\in\\Sigma^*$ es reconocida si el cómputo de $M$ sobre $x$ termina en un estado aceptador. Por tanto, $L(M)=\\{x\\in\\Sigma^*:x$ es reconocida por $M\\}$.`},
+{t:'Autómatas finitos',q:'Explicar el algoritmo para programar un autómata determinista.',a:`<ol><li>Representar los estados con números naturales, usando 0 para el inicial.</li><li>Representar los símbolos del alfabeto como caracteres.</li><li>Simular el cálculo con un bucle <span class="tag">while</span>.</li><li>Dentro del bucle, usar <span class="tag">switch-case</span> para aplicar transiciones.</li><li>Al terminar la entrada, comprobar si el estado actual es aceptador.</li></ol>`},
+{t:'Autómatas finitos',q:'¿Por qué son importantes los autómatas deterministas?',a:`Se usan para diseñar analizadores léxicos de compiladores, procesadores de texto y programas eficientes de búsqueda de patrones en textos.`},
+{t:'Autómatas finitos',q:'Definir autómata finito indeterminista.',a:`Un autómata finito indeterminista es una estructura similar a un determinista, pero su función de transición puede devolver un conjunto de estados, no un único estado. Así, ante un mismo estado y símbolo puede haber varias transiciones posibles.`},
+{t:'Autómatas finitos',q:'¿Qué significa que un autómata indeterminista reconozca una palabra?',a:`Una palabra es reconocida si existe al menos un cómputo posible que, al leer toda la entrada, termina en un estado aceptador. No hace falta que todos los caminos acepten; basta con uno.`},
+{t:'Autómatas finitos',q:'Explicar la idea del paso de indeterminista a determinista.',a:`Cada estado del autómata determinista representa un conjunto de estados del indeterminista. El estado inicial es el conjunto de estados alcanzables inicialmente. Para cada símbolo se calculan todos los estados alcanzables desde el conjunto actual. Los estados aceptadores son los conjuntos que contienen al menos un estado aceptador original.`},
+{t:'Lenguajes regulares',q:'Definir expresión regular.',a:`Una expresión regular es una forma algebraica de describir lenguajes regulares usando símbolos del alfabeto, unión, concatenación, estrella de Kleene, paréntesis, $\\emptyset$ y $\\lambda$.`},
+{t:'Lenguajes regulares',q:'¿Qué operaciones básicas aparecen en las expresiones regulares?',a:`Las operaciones principales son: unión $R+S$, concatenación $RS$ y estrella de Kleene $R^*$, que representa cero o más repeticiones.`},
+{t:'Lenguajes regulares',q:'¿Qué afirma el teorema de equivalencia entre autómatas finitos y expresiones regulares?',a:`Afirma que un lenguaje es reconocido por algún autómata finito si y solo si puede ser descrito mediante una expresión regular.`},
+{t:'Lenguajes regulares',q:'¿Qué es un lenguaje regular?',a:`Un lenguaje es regular si puede ser reconocido por un autómata finito. Equivalentemente, si puede describirse mediante una expresión regular.`},
+{t:'Autómatas con pila',q:'Definir autómata con pila.',a:`Un autómata con pila es un modelo de cómputo con estados, cinta de entrada y una pila auxiliar. Sus transiciones dependen del estado actual, del símbolo leído en la entrada y del símbolo superior de la pila; además, pueden modificar la pila.`},
+{t:'Autómatas con pila',q:'¿Qué papel tiene la pila en un autómata con pila?',a:`La pila permite guardar información no acotada de forma LIFO: el último símbolo apilado es el primero que se puede consultar o retirar. Esto permite reconocer lenguajes que no pueden reconocerse con autómatas finitos, por ejemplo estructuras anidadas.`},
+{t:'Autómatas con pila',q:'Explicar una transición típica de autómata con pila.',a:`Una transición como $((p,a,A),(q,\\gamma))$ significa: estando en el estado $p$, leyendo $a$ en la entrada y teniendo $A$ arriba de la pila, se pasa al estado $q$, se consume $a$ si no es $\\lambda$, se desapila $A$ si no es $\\lambda$ y se apila $\\gamma$ si no es $\\lambda$.`},
+{t:'Autómatas con pila',q:'¿Qué significa una transición con $\\lambda$ en la entrada?',a:`Significa que el autómata puede hacer ese movimiento sin consumir ningún símbolo de la entrada. Solo cambia de estado y/o modifica la pila.`},
+{t:'Gramáticas incontextuales',q:'Definir gramática incontextual.',a:`Una gramática incontextual es una estructura $G=(V,\\Sigma,P,S)$ donde $V$ es el conjunto de variables, $\\Sigma$ el conjunto de terminales, $P$ el conjunto de producciones y $S\\in V$ el símbolo inicial. Las producciones tienen una sola variable en la parte izquierda.`},
+{t:'Gramáticas incontextuales',q:'¿Qué es una derivación en una gramática?',a:`Una derivación es una secuencia de pasos en la que se reemplazan variables usando producciones de la gramática hasta obtener una palabra formada por terminales.`},
+{t:'Gramáticas incontextuales',q:'Definir el lenguaje generado por una gramática.',a:`El lenguaje generado por una gramática $G$ es $L(G)=\\{w\\in\\Sigma^*:S\\Rightarrow_G^* w\\}$, es decir, el conjunto de palabras terminales derivables desde el símbolo inicial.`},
+{t:'Gramáticas incontextuales',q:'¿Qué relación hay entre gramáticas incontextuales y autómatas con pila?',a:`Los lenguajes generados por gramáticas incontextuales son exactamente los lenguajes reconocidos por autómatas con pila. Ambos modelos tienen la misma potencia expresiva.`},
+{t:'LL(1)',q:'Definir Primeros$(\\alpha)$.',a:`$Primeros(\\alpha)$ es el conjunto de terminales que pueden aparecer al principio de alguna palabra derivada desde $\\alpha$. Si $\\alpha$ puede derivar la palabra vacía, también se incluye $\\lambda$.`},
+{t:'LL(1)',q:'Definir Siguientes$(A)$.',a:`$Siguientes(A)$ es el conjunto de terminales que pueden aparecer inmediatamente a la derecha de la variable $A$ en alguna forma sentencial derivada desde el símbolo inicial.`},
+{t:'LL(1)',q:'Explicar cómo se construye la tabla LL(1).',a:`Para cada producción $A\\to\\beta$, se calculan los terminales de $Primeros(\\beta)$. Para cada terminal $a$ de ese conjunto, se coloca la producción en $TABLA[A,a]$. Si $\\lambda\\in Primeros(\\beta)$, también se coloca la producción en las columnas correspondientes a $Siguientes(A)$.`},
+{t:'LL(1)',q:'Definir gramática LL(1).',a:`Una gramática es LL(1) si su tabla de análisis no tiene conflictos: para cada variable $A$ y terminal $a$, la celda $TABLA[A,a]$ contiene como mucho una producción.`},
+{t:'LL(1)',q:'¿Por qué son importantes las gramáticas LL(1) en compiladores?',a:`Porque permiten construir analizadores sintácticos predictivos: mirando solo el símbolo superior de la pila y un símbolo de entrada se puede decidir qué producción aplicar.`},
+{t:'LL(1)',q:'Explicar la regla de factorización.',a:`Si varias producciones comparten prefijo, por ejemplo $A\\to\\alpha\\beta_1|\\alpha\\beta_2|\\cdots|\\alpha\\beta_n$, se sustituyen por $A\\to\\alpha A'$ y $A'\\to\\beta_1|\\beta_2|\\cdots|\\beta_n$. Sirve para eliminar decisiones ambiguas al comienzo.`},
+{t:'LL(1)',q:'Explicar la regla de eliminación de recursión izquierda.',a:`Si hay producciones $A\\to A\\alpha_1|\\cdots|A\\alpha_n|\\beta_1|\\cdots|\\beta_m$, donde las $\\beta_i$ no empiezan por $A$, se reemplaza por $A\\to\\beta_1A'|\\cdots|\\beta_mA'$ y $A'\\to\\alpha_1A'|\\cdots|\\alpha_nA'|\\lambda$.`}
+];
+let state = JSON.parse(localStorage.getItem('logica_lenguajes_quiz_state') || '{}');
+state.results ||= {};
+let order = [...DATA.keys()];
+let idx = 0;
+const $ = id => document.getElementById(id);
+const temas = ['Todos', ...Array.from(new Set(DATA.map(x => x.t)))];
+$('tema').innerHTML = temas.map(t => `<option>${t}</option>`).join('');
+function save(){localStorage.setItem('logica_lenguajes_quiz_state', JSON.stringify(state));}
+function filtered(){const t=$('tema').value;return DATA.map((x,i)=>[x,i]).filter(([x])=>t==='Todos'||x.t===t).map(([,i])=>i);}
+function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function updateStats(){const ids=filtered();const vals=ids.map(i=>state.results[i]).filter(Boolean);$('total').textContent=ids.length;$('ok').textContent=vals.filter(v=>v==='ok').length;$('ko').textContent=vals.filter(v=>v==='ko').length;$('review').textContent=vals.filter(v=>v==='review').length;$('bar').style.width=ids.length?`${Math.round(vals.length/ids.length*100)}%`:'0%';}
+function render(){if(!order.length)order=filtered();idx=Math.max(0,Math.min(idx,order.length-1));const id=order[idx],item=DATA[id];$('temaActual').textContent=item.t;$('contador').textContent=`${idx+1} / ${order.length}`;$('pregunta').textContent=item.q;$('solucion').innerHTML=item.a;$('answer').classList.remove('show');$('respuestaUsuario').value='';$('bien').disabled=$('mal').disabled=$('duda').disabled=true;updateStats();if(window.MathJax)MathJax.typesetPromise();}
+function setResult(v){state.results[order[idx]]=v;save();updateStats();next();}
+function next(){idx=(idx+1)%order.length;render();}
+$('tema').onchange=()=>{order=filtered();idx=0;render();};
+$('shuffle').onclick=()=>{order=shuffleArray(filtered());idx=0;render();};
+$('reset').onclick=()=>{if(confirm('¿Seguro que quieres borrar el progreso guardado?')){state={results:{}};save();updateStats();}};
+$('mostrar').onclick=()=>{$('answer').classList.add('show');$('bien').disabled=$('mal').disabled=$('duda').disabled=false;if(window.MathJax)MathJax.typesetPromise();};
+$('bien').onclick=()=>setResult('ok');$('mal').onclick=()=>setResult('ko');$('duda').onclick=()=>setResult('review');$('siguiente').onclick=next;
+document.addEventListener('keydown',e=>{if(e.target.tagName==='TEXTAREA'&&e.key!=='Enter')return;if(e.key==='Enter')$('mostrar').click();if(e.key==='1'&&!$('bien').disabled)$('bien').click();if(e.key==='2'&&!$('mal').disabled)$('mal').click();if(e.key==='3'&&!$('duda').disabled)$('duda').click();if(e.key==='ArrowRight')next();});
+render();
+</script>
+</body>
+</html>
